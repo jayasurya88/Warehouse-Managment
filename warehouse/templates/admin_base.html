@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+        }
+        .wrapper {
+            display: flex;
+            width: 100%;
+        }
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background: #007bff; /* Blue color */
+            color: #fff;
+            transition: all 0.3s;
+            overflow-y: auto; /* Enable vertical scrolling */
+            z-index: 1000; /* Ensure sidebar is above content */
+        }
+        #sidebar.active {
+            margin-left: -250px;
+        }
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: #007bff; /* Blue color */
+        }
+        #sidebar ul.components {
+            padding: 20px 0;
+        }
+        #sidebar ul p {
+            padding: 10px;
+            font-size: 1.1em;
+            display: block;
+        }
+        #sidebar ul li a {
+            display: block;
+            padding: 10px;
+            font-size: 1.1em;
+            color: #fff;
+            text-decoration: none; /* Remove underline */
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #sidebar ul li a:hover {
+            color: #007bff; /* Blue color */
+            background: #fff;
+            text-decoration: none; /* Maintain no underline on hover */
+        }
+        .badge {
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
+        .table-custom thead th {
+            background-color: #007bff; /* Blue background color for table header */
+            color: white; /* White text color */
+            border-color: #007bff; /* Border color to match background */
+        }
+        #content {
+            margin-left: 250px; /* Adjust to match sidebar width */
+            width: 100%;
+            padding: 20px;
+            transition: margin-left 0.3s;
+            min-height: 100vh;
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+        .table-container {
+            overflow-x: auto; /* Enable horizontal scrolling on smaller screens */
+            max-width: 100%; /* Ensure the table container does not exceed the viewport width */
+        }
+        .table-responsive {
+            overflow-x: auto; /* Enable horizontal scrolling on smaller screens */
+            -ms-overflow-style: -ms-autohiding-scrollbar; /* Hide scrollbar in IE */
+            -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS devices */
+        }
+        .table {
+            width: 100%; /* Ensure the table expands to the full width of its container */
+            table-layout: auto; /* Let the browser automatically determine the table layout */
+        }
+        .table th,
+        .table td {
+            padding: 12px; /* Increase padding for better cell spacing */
+            vertical-align: middle;
+            font-size: 14px; /* Optionally adjust font size */
+            line-height: 1.6; /* Optionally adjust line height */
+        }
+        .user-photo {
+            max-width: 50px; /* Maximum width for the user photo */
+            max-height: 50px; /* Maximum height for the user photo */
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: -250px; /* Hide sidebar on small screens */
+            }
+            #sidebar.active {
+                margin-left: 0;
+            }
+            #content {
+                margin-left: 0; /* Adjust content for small screens */
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h1>ShopSphere</h1>
+                <h6>Admin Dashboard</h6>
+            </div>
+            <ul class="list-unstyled components">
+              
+                <li>
+                    <a href="{% url 'approve_disapprove' %}">
+                        Approve User
+                        {% if pending_user_count > 0 %}
+                            <span class="badge badge-pill badge-danger">{{ pending_user_count }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'delivery_approve' %}">
+                        Approve Delivery Boy
+                        {% if pending_delivery_count > 0 %}
+                            <span class="badge">{{ pending_delivery_count }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'addcategory' %}">Add Categories</a>
+                </li>
+                <li>
+                    <a href="{% url 'addproduct' %}">Add Product</a>
+                </li>
+                <li>
+                    <a href="{% url 'product_list' %}">Product List</a>
+                </li>
+                <li>
+                    <a href="{% url 'admin_orders' %}">All Orders</a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                </div>
+            </nav>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<div class="container" style="padding-top:150px">
+    <h2>Checkout</h2>
+    <form method="post" action="{% url 'checkout_view' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" class="form-control" id="address" name="address" required>
+        </div>
+        <div class="form-group">
+            <label for="landmark">Landmark</label>
+            <input type="text" class="form-control" id="landmark" name="landmark">
+        </div>
+        <div class="form-group">
+            <label for="shipping_method">Shipping Method</label>
+            <select class="form-control" id="shipping_method" name="shipping_method" required>
+                <option value="">Select Shipping Method</option>
+                <option value="road">By Road</option>
+                <option value="ship">By Ship</option>
+                <option value="airline">By Airline</option>
+            </select>
+        </div>
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <button type="submit" class="btn btn-dark">Place Order</button>
+    </form>
+</div>
+{% endblock %}

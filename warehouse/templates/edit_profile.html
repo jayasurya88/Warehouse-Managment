@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+    <br><br><br><br><br>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="text-center mb-4">Edit Profile</h2>
+                <div class="form-container">
+                    {% if messages %}
+                        <div class="alert alert-danger">
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                       
+                        <div class="form-group">
+                            <label for="first_name">First Name:</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name:</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                            <div class="valid-feedback">Valid email</div>
+                            <div class="invalid-feedback">Please enter a valid email address</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number:</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ user.phone }}" required>
+                            <div class="valid-feedback">Valid phone number</div>
+                            <div class="invalid-feedback">Please enter a valid phone number</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pan_card">PAN Card:</label>
+                            <input type="text" class="form-control" id="pan_card" name="pan_card" value="{{ user.pan_card }}" required>
+                        </div>
+                        <div class="card-body text-center">
+                            {% if user.photo %}
+                            <img src="{{ user.photo.url }}" alt="Profile Picture" class="img-fluid profile-img">
+                            {% else %}
+                            <div class="alert alert-warning" role="alert">
+                                No profile picture available.
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="photo">Photo:</label>
+                            <input type="file" class="form-control-file" id="photo" name="photo">
+                        </div>
+                       
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JavaScript for phone number and email validation -->
+    <script>
+        // Function to validate phone number format
+        function validatePhoneNumber(input) {
+            var phoneNumberPattern = /^\d{10}$/;
+            if (phoneNumberPattern.test(input.value)) {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            } else {
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+            }
+        }
+
+        // Function to validate email format
+        function validateEmail(input) {
+            var emailPattern = /^[\w\.-]+@[\w\.-]+\.\w+$/;
+            if (emailPattern.test(input.value)) {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            } else {
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+            }
+        }
+
+        // Live validation for phone number and email fields
+        document.getElementById('phone').addEventListener('input', function() {
+            validatePhoneNumber(this);
+        });
+        
+        document.getElementById('email').addEventListener('input', function() {
+            validateEmail(this);
+        });
+    </script>
+    <style>
+        .profile-img {
+            max-width: 100px;
+            height: auto;
+            border-radius: 10px;
+        }
+    </style>
+{% endblock %}

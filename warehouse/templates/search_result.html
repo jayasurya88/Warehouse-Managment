@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Result</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Result</h1>
+        {% if error %}
+            <p>{{ error }}</p>
+        {% else %}
+            <h2>Order Details</h2>
+            <p>Tracking ID: {{ order.tracking_id }}</p>
+            <p>Address: {{ order.address }}</p>
+            <p>Landmark: {{ order.landmark }}</p>
+            <p>Estimated Delivery Date: {{ order.estimated_delivery_date }}</p>
+            <p>Status: {{ order.status }}</p>
+            <!-- Add other order details here -->
+        {% endif %}
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

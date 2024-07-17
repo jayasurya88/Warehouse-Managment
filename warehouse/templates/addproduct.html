@@ -1,0 +1,53 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Add Product</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <form method="post" enctype="multipart/form-data" action="{% url 'addproduct1' %}">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="category" class="form-label">Category:</label>
+            <select class="form-control" id="category" name="category">
+                {% for c in categories %}
+                <option value="{{ c.id }}">{{ c.category_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group mb-3">
+            <label for="productName" class="form-label">Product Name:</label>
+            <input type="text" class="form-control" id="productName" name="name">
+        </div>
+        <div class="form-group mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea class="form-control" id="description" name="description"></textarea>
+        </div>
+        <div class="form-group mb-3">
+            <label for="specifications" class="form-label">Specifications:</label>
+            <textarea class="form-control" id="specifications" name="specifications"></textarea>
+        </div>
+        <div class="form-group mb-3">
+            <label for="price" class="form-label">Price:</label>
+            <input type="number" class="form-control" id="price" name="price" step="0.01">
+        </div>
+        <div class="form-group mb-3">
+            <label for="stockQuantity" class="form-label">Stock Quantity:</label>
+            <input type="number" class="form-control" id="stockQuantity" name="stock_quantity">
+        </div>
+        <div class="form-group mb-3">
+            <label for="file" class="form-label">Product Image:</label>
+            <input type="file" class="form-control-file" id="file" name="pimg">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

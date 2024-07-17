@@ -1,0 +1,77 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+    {% if product %}
+        Edit Product - {{ product.name }}
+    {% else %}
+        Add Product
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">
+        {% if product %}
+            Edit Product - {{ product.name }}
+        {% else %}
+            Add Product
+        {% endif %}
+    </h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <form method="post" enctype="multipart/form-data" action="{% if product %}{% url 'edit_product' product.id %}{% else %}{% url 'add_product' %}{% endif %}">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="category" class="form-label">Category:</label>
+            <select class="form-control" id="category" name="category">
+                {% for c in categories %}
+                    <option value="{{ c.id }}" {% if product and product.category_id == c.id %}selected{% endif %}>{{ c.category_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group mb-3">
+            <label for="productName" class="form-label">Product Name:</label>
+            <input type="text" class="form-control" id="productName" name="name" value="{% if product %}{{ product.name }}{% else %}''{% endif %}">
+        </div>
+        <div class="form-group mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea class="form-control" id="description" name="description">{% if product %}{{ product.description }}{% else %}''{% endif %}</textarea>
+        </div>
+        <div class="form-group mb-3">
+            <label for="specifications" class="form-label">Specifications:</label>
+            <textarea class="form-control" id="specifications" name="specifications">{% if product %}{{ product.specifications }}{% else %}''{% endif %}</textarea>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="price" class="form-label">Price:</label>
+            <input type="number" class="form-control" id="price" name="price" step="0.01" value="{{ product.price|default:'' }}">
+
+        </div>
+        <div class="form-group mb-3">
+            <label for="stockQuantity" class="form-label">Stock Quantity:</label>
+            <input type="number" class="form-control" id="stockQuantity" name="stock_quantity" value="{{ product.stock_quantity|default_if_none:'' }}">
+
+        </div>
+        <div class="form-group mb-3">
+            <label for="file" class="form-label">Product Image:</label>
+            <input type="file" class="form-control-file" id="file" name="pimg">
+            {% if product.pimg %}
+                <img src="{{ product.pimg.url }}" alt="{{ product.name }}" class="img-thumbnail" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">
+            {% if product %}
+                Update Product
+            {% else %}
+                Add Product
+            {% endif %}
+        </button>
+    </form>
+</div>
+{% endblock %}

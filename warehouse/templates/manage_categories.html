@@ -1,0 +1,95 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Manage Categories{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Add Category</h2>
+    <form id="addCategoryForm" method="post" action="{% url 'addcategory1' %}">
+        {% csrf_token %}
+        {% if messages %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <input type="text" class="form-control" id="category" name="category" placeholder="Enter category name">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Category</button>
+    </form>
+
+    <hr class="mt-5">
+
+    <h2 class="text-center">Categories</h2>
+    <div id="categoryList" class="row">
+        <div class="col-md-12 mb-3">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Category Name</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                    <tr>
+                        <td>{{ category.category_name }}</td>
+                        <td>
+                            <a href="{% url 'edit_category' category.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <form method="post" action="{% url 'delete_category' category.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2">No categories found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addCategoryForm = document.getElementById('addCategoryForm');
+    const categoryList = document.getElementById('categoryList');
+
+    addCategoryForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(addCategoryForm);
+
+        fetch(addCategoryForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Clear the form
+                addCategoryForm.reset();
+                // Update the category list
+                categoryList.innerHTML = data.html_category_list;
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+</script>
+{% endblock %}

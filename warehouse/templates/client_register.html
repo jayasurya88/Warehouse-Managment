@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Custom CSS */
+        body {
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 100px; /* Adjust as needed */
+            background-color: #f8f9fa; /* Light background color */
+        }
+        .form-container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            margin-top: 50px;
+            background-color: #fff; /* White background */
+            border: 1px solid #ced4da; /* Light gray border */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            color: #343a40;
+            font-weight: bold;
+        }
+        .form-container label {
+            color: #495057;
+        }
+        .form-container .card {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .valid-feedback, .invalid-feedback {
+            display: block;
+        }
+        .navbar-custom {
+            background-color: #343a40; /* Dark background color */
+            color: #fff; /* Light text color */
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .navbar-custom .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffc107; /* Yellow accent color */
+        }
+        .navbar-custom .nav-link {
+            font-size: 1.1rem;
+            color: #fff; /* Light text color */
+            margin-left: 1.5rem;
+            margin-right: 1.5rem;
+            transition: color 0.3s;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #007bff; /* Highlight color */
+        }
+        .footer {
+            background-color: #343a40; /* Dark background color */
+            color: #fff; /* Light text color */
+            padding: 20px 0; /* Padding top and bottom */
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
+        <a class="navbar-brand" href="#"> <i class="fas fa-shopping-cart"></i> ShopSphere</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login1' %}">Shop</a>
+                </li>
+               
+              
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login1' %}"><i class="fas fa-shopping-cart"></i> Cart</a>
+                </li> -->
+                <!-- <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user"></i> Account
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">Reset Password</a>
+                        <a class="dropdown-item" href="#">Edit Profile</a>
+                       
+                    </div>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link login-link" href="{% url 'login1' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link signup-link" href="{% url 'register' %}">Sign Up</a>
+                </li>
+               
+            </ul>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-container">
+                    <h2 class="text-center mb-4">Client Registration</h2>
+                    <div class="card">
+                        {% if messages %}
+                            <div class="alert alert-danger">
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <form method="post" enctype="multipart/form-data" id="registrationForm" action="{% url 'register' %}">
+                            {% csrf_token %}
+                            
+                            <div class="form-group">
+                                <label for="first_name">First Name:</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Last Name:</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="valid-feedback">Valid email</div>
+                                <div class="invalid-feedback">Please enter a valid email address</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number:</label>
+                                <input type="text" class="form-control" id="phone" name="phone" required>
+                                <div class="valid-feedback">Valid phone number</div>
+                                <div class="invalid-feedback">Please enter a valid phone number</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="pan_card">PAN Card:</label>
+                                <input type="text" class="form-control" id="pan_card" name="pan_card" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="photo">Photo:</label>
+                                <input type="file" class="form-control-file" id="photo" name="photo">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address:</label>
+                                <textarea class="form-control" id="address" name="address" required></textarea>
+                            </div>
+                            
+                            <!-- Hidden input field to capture user type -->
+                            <input type="hidden" name="user_type" value="2"> <!-- Change value to '2' for delivery boy -->
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Register</button>
+                                <a href="{% url 'delivery_register' %}" class="d-block mt-3">Are you registering as a delivery boy? Click here</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {% now "Y" %} Your Company. All rights reserved.</p>
+            <p>Terms of Service | Privacy Policy</p>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Bootstrap JS -->
+  <!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Custom JavaScript for phone number and email validation -->
+<script>
+    // Function to validate phone number format
+    function validatePhoneNumber(input) {
+        var phoneNumberPattern = /^\d{10}$/;
+        if (phoneNumberPattern.test(input.value)) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        } else {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+        }
+    }
+
+    // Function to validate email format
+    function validateEmail(input) {
+        var emailPattern = /^[\w\.-]+@[\w\.-]+\.\w+$/;
+        if (emailPattern.test(input.value)) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        } else {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+        }
+    }
+
+    // Event listeners for input validation
+    document.addEventListener('DOMContentLoaded', function () {
+        var phoneInput = document.getElementById('phone');
+        var emailInput = document.getElementById('email');
+
+        phoneInput.addEventListener('input', function () {
+            validatePhoneNumber(this);
+        });
+
+        emailInput.addEventListener('input', function () {
+            validateEmail(this);
+        });
+    });
+</script>

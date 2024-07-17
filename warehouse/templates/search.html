@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Orders{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <br><br><br><br><br><br>
+        <h1>Search Orders</h1>
+        <form action="{% url 'search' %}" method="GET">
+            <div class="form-group">
+                <label for="tracking_id">Search by Tracking ID:</label>
+                <input type="text" name="tracking_id" class="form-control" id="tracking_id" placeholder="Enter tracking ID">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <hr>
+
+        {% if order %}
+            <h2>Order Details</h2>
+            <p>Tracking ID: {{ order.tracking_id }}</p>
+            <p>Address: {{ order.address }}</p>
+            <p>Landmark: {{ order.landmark }}</p>
+        
+            <p>Status: 
+                {% if order.client_marked_completed and order.delivery_person_marked_completed %}
+                    Delivered
+                {% elif order.delivery_person_marked_completed %}
+                    Delivery Boy Delivered, Please Confirm Receipt
+                {% else %}
+                    {{ order.get_status_display }}
+                {% endif %}
+            </p>
+            
+            {% if order.dispatch_location %}
+                <p>Dispatch Location: {{ order.dispatch_location }}</p>
+            {% endif %}
+            
+            {% if order.transmit_location %}
+                <p>Transmit Location: {{ order.transmit_location }}</p>
+            {% endif %}
+            
+            <p>Estimated Delivery Date: {{ order.estimated_delivery_date|date:"F d, Y" }}</p>
+            
+            <h3>Order Status</h3>
+            <div class="progress">
+                <div class="progress-bar {% if order.status == 'dispatched' %}bg-info{% elif order.status == 'intransit' %}bg-warning{% elif order.status == 'delivered' %}bg-success{% endif %}"
+                     role="progressbar"
+                     style="width:
+                            {% if order.status == 'dispatched' %}33.33%{% elif order.status == 'intransit' %}66.66%{% elif order.status == 'delivered' %}100%{% endif %};"
+                     aria-valuenow="
+                            {% if order.status == 'dispatched' %}33.33{% elif order.status == 'intransit' %}66.66{% elif order.status == 'delivered' %}100{% endif %}"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    {% if order.status == 'dispatched' %}Dispatched{% elif order.status == 'intransit' %}In Transit{% elif order.status == 'delivered' %}Delivered{% endif %}
+                </div>
+            </div>
+            
+            {% if order.delivery_person_marked_completed and not order.client_marked_completed %}
+            <form action="{% url 'mark_order_as_completed_client' order.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm">Mark as Delivered</button>
+            </form>
+            {% endif %}
+
+        {% else %}
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% else %}
+                <p>No order found.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

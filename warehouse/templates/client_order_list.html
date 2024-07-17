@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}All Orders{% endblock %}
+
+{% block content %}
+<style>
+    .custom-padding {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+</style>
+
+<div class="container-fluid mt-5 custom-padding">
+    <br><br>
+    <h1 class="text-center mb-4">All Orders</h1>
+   
+    {% if messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Tracking ID</th>
+                    <th>Customer</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Order Date</th>
+                    <th>Estimated Delivery Date</th>
+                    <th>Order Status</th>
+                    <th>Shipping Method</th>
+                    <th>Delivery Person</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.tracking_id }}</td>
+                    <td>{{ order.user.get_full_name }}</td>
+                    <td>{{ order.address }}</td>
+                    <td>{{ order.user.email }}</td>
+                    <td>{{ order.items.first.product.name }}</td>
+                    <td>{{ order.items.first.quantity }}</td>
+                    <td>{{ order.created_at }}</td>
+                    <td>{{ order.estimated_delivery_date|date:"F d, Y" }}</td>
+                    <td>
+                        {% if order.client_marked_completed and order.delivery_person_marked_completed %}
+                            <span class="text-success">Delivered</span>
+                        {% else %}
+                            {{ order.status }}
+                        {% endif %}
+                    </td>
+                    <td>{{ order.delivery_method }}</td>
+                    <td>
+                        {% if order.delivery_person %}
+                            {{ order.delivery_person.get_full_name }}
+                        {% else %}
+                            Not Assigned
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if order.delivery_person_marked_completed and not order.client_marked_completed %}
+                            <form action="{% url 'mark_order_as_completed_client' order.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success btn-sm">Mark as Delivered</button>
+                            </form>
+                        {% else %}
+                            No Action Available
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

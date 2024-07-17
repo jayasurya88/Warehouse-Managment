@@ -1,0 +1,59 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Products List{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Products List</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Category</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Specifications</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Stock Quantity</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.category.category_name }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.specifications }}</td>
+                    <td>${{ product.price }}</td>
+                    <td>{{ product.stock_quantity }}</td>
+                    <td>
+                        {% if product.pimg %}
+                        <img src="{{ product.pimg.url }}" alt="{{ product.name }}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+                        {% else %}
+                        No Image
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'delete_product' product.id %}" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm mb-2 me-2" style="width: 70px;">Delete</button>
+                        </form>
+                        <a href="{% url 'edit_product' product.id %}" class="btn btn-primary btn-sm mb-2" style="width: 70px;">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

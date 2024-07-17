@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Completion Notification</title>
+</head>
+<body>
+    <h1>Your Order Has Been Completed</h1>
+    <p>Dear {{ order.user.username }},</p>
+    <p>We are pleased to inform you that your order with tracking ID {{ order.tracking_id }} has been marked as completed.</p>
+    <p>Thank you for shopping with us.</p>
+    <p>Best regards,</p>
+    <p>The Store Team</p>
+</body>
+</html>

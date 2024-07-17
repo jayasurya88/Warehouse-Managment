@@ -1,0 +1,117 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}All Orders{% endblock %}
+
+{% block extra_css %}
+<style>
+    .table-custom {
+        background-color: #007bff; /* Blue background color for the entire table */
+        color: white; /* White text color */
+    }
+
+    .table-custom thead th {
+        background-color: #007bff; /* Blue background color for table header */
+        color: white; /* White text color */
+        border-color: #007bff; /* Border color to match background */
+    }
+
+    .table-custom tbody td {
+        background-color: #f8f9fa; /* Light gray background color for table rows */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4"> <!-- Use container-fluid for full width -->
+    <h1 class="text-center mb-4">Total Orders: <span class="badge badge-secondary">{{ orders|length }}</span></h1>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="table-responsive">
+        {% if orders %}
+        <div class="table-container">
+            <table class="table table-bordered table-striped table-custom">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th> <!-- Add numbering column header -->
+                        <th>Tracking ID</th>
+                        <th>Customer</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>
+                            {% if orders.0.client_marked_completed and orders.0.delivery_person_marked_completed %}
+                                Delivered to
+                            {% else %}
+                                Location
+                            {% endif %}
+                        </th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Order Date</th>
+                        <th>Order Status</th>
+                        <th>Delivery Person</th>
+                        <th>Assign Delivery Person</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders reversed %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td> <!-- Add loop counter for numbering -->
+                        <td>{{ order.tracking_id|default:"N/A" }}</td>
+                        <td>{{ order.user.get_full_name|default:"N/A" }}</td>
+                        <td>{{ order.address|default:"N/A" }}</td>
+                        <td>{{ order.user.email|default:"N/A" }}</td>
+                        <td class="{% if order.client_marked_completed and order.delivery_person_marked_completed %} delivered-location {% endif %}">
+                            {% if order.client_marked_completed and order.delivery_person_marked_completed %}
+                                {{ order.address|default:"N/A" }}
+                            {% else %}
+                                {% if order.dispatch_location %}
+                                    <strong>Dispatch:</strong> {{ order.dispatch_location|default:"N/A" }}<br>
+                                {% endif %}
+                                {% if order.transmit_location %}
+                                    <strong>Transmit:</strong> {{ order.transmit_location|default:"N/A" }}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>{{ order.items.first.product.name|default:"N/A" }}</td>
+                        <td>{{ order.items.first.quantity|default:"N/A" }}</td>
+                        <td>{{ order.created_at|date:"Y-m-d H:i:s"|default:"N/A" }}</td>
+                        <td>
+                            {% if order.client_marked_completed and order.delivery_person_marked_completed %}
+                                <span class="text-success">Delivered</span>
+                            {% else %}
+                                {{ order.status|default:"N/A" }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if order.delivery_person %}
+                                {{ order.delivery_person.get_full_name }}
+                            {% else %}
+                                <span class="text-muted">Not Assigned</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not order.client_marked_completed or not order.delivery_person_marked_completed %}
+                                <a href="{% url 'assign_delivery_person' order.id %}" class="btn btn-primary btn-sm">Assign Delivery Person</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            No orders available.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

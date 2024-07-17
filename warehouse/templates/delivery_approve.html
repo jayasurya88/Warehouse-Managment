@@ -1,0 +1,60 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Approve/Disapprove Delivery Boy{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Approve/Disapprove Delivery Boy</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Photo</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Date Joined</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        {% if user.photo %}
+                        <img src="{{ user.photo.url }}" alt="{{ user.username }}" class="user-photo">
+                        {% else %}
+                        No Photo
+                        {% endif %}
+                    </td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.date_joined }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>
+                        <form id="approveForm{{ user.id }}" method="post" action="{% url 'approve_user' user.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            {% if user.is_approved %}
+                            <button id="approveBtn{{ user.id }}" type="submit" class="btn btn-success btn-sm" disabled>Approved</button>
+                            {% else %}
+                            <button id="approveBtn{{ user.id }}" type="submit" class="btn btn-success btn-sm">Approve</button>
+                            {% endif %}
+                        </form>
+                        <form id="disapproveForm{{ user.id }}" method="post" action="{% url 'disapprove_user' user.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button id="disapproveBtn{{ user.id }}" type="submit" class="btn btn-danger btn-sm">
+                                {% if user.is_approved %}
+                                    Disapprove
+                                {% else %}
+                                    Disapproved
+                                {% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
