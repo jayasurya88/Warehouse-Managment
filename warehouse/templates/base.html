@@ -109,14 +109,20 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
+    
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    <a class="nav-link" href="{% url 'clientpage' %}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Shop</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All category</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><hr class="dropdown-divider"></li>
+                        {% for category in categories %}
+                        <li><a class="dropdown-item" href="{% url 'category_page' category_id=category.id %}">{{ category.category_name }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
@@ -129,7 +135,12 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link signup-link" href="#">Logout</a>
+                    <a class="nav-link" href="{% url 'search_view' %}">Tracking Status</a>
+                </li><li class="nav-item">
+                    <a class="nav-link" href="{% url 'client_order_list' %}">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link signup-link" href="{% url 'logout' %}">Logout</a>
                 </li>
             </ul>
         </div>
@@ -145,7 +156,8 @@
     <!-- End Page Content -->
 
     <!-- Footer Section -->
-    <!-- <footer class="premium-footer">
+    <!-- 
+    <footer class="premium-footer">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -172,13 +184,15 @@
                 </div>
             </div>
         </div>
-    </footer> -->
+    </footer> 
+    -->
     <!-- End Footer Section -->
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     {% block scripts %}
     <!-- Additional scripts can be included by child templates -->
     {% endblock %}
