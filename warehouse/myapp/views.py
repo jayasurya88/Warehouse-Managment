@@ -11,7 +11,12 @@ from django.contrib.auth import get_user_model
 def index(request):
      categories = Category.objects.all()
      products = Product.objects.all()
-     return render(request, 'index.html', {'categories': categories, 'products': products})
+
+     context = {
+        'categories': categories,
+        'products': products,
+    }
+     return render(request, 'index.html',context )
 
 def delivery_dashboard(request):
     orders = Order.objects.all()
@@ -219,7 +224,11 @@ def password_reset(request):
 def clientpage(request):
     categories = Category.objects.all()
     products = Product.objects.all()
-    return render(request,'clientpage.html', {'categories': categories, 'products': products})
+    context = {
+        'categories': categories,
+        'products': products,
+    }
+    return render(request,'clientpage.html', context)
 
 
 
